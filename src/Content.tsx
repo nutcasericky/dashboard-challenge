@@ -27,9 +27,8 @@ db.version(1).stores({
 
 function Content(): JSX.Element {
 
-  //define variables
+  //define constant 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  // Create a new database instance
 
   //fetch data from API and insert into database
   useEffect(() => {
@@ -39,7 +38,7 @@ function Content(): JSX.Element {
           'https://api.open-meteo.com/v1/forecast?latitude=1.29&longitude=103.85&hourly=relativehumidity_2m,direct_radiation&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSingapore&start_date=2023-10-01&end_date=2023-10-10'
         );
         setWeatherData(response.data);
-        await insertData(response.data);
+        await insertData(response.data); //store in database
       } catch (error) {
         console.error('Error fetching data: ', error);
         // If fetching fails, try to retrieve data from database
@@ -173,19 +172,6 @@ function Content(): JSX.Element {
       },
     });
   };
-
-  const logStoredData = async () => {
-    try {
-      const storedData = await db.table('weather').toArray();
-      console.log('Stored data:', storedData);
-    } catch (error) {
-      console.error('Error retrieving data from IndexedDB: ', error);
-    }
-  };
-  useEffect(() => {
-    logStoredData(); // Call logStoredData function
-  }, []);
-
 
   //return the charts
   return (
